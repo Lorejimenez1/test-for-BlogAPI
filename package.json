@@ -1,13 +1,14 @@
 {
-  "name": "npm-script-example",
+  "name": "blog-api-v1",
   "version": "1.0.0",
-  "description": "Example of NPM scripts",
+  "description": "Crud API",
   "scripts": {
     "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.14.0"
+    "express": "^4.14.0",
+    "uuid": "^3.3.2"
   }
 }
