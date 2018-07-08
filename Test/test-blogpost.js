@@ -10,7 +10,7 @@ const expect = chai.expect;
 // see: https://github.com/chaijs/chai-http
 chai.use(chaiHttp);
 
-describe("Blog Post", function() {
+describe("Blog Posts", function() {
   before(function() {
     return runServer();
   });
@@ -19,28 +19,29 @@ describe("Blog Post", function() {
     return closeServer();
   });
 
-  it("should list blog post on GET", function() {
-    .request(app)
+   it("should list items on GET", function() {
+    return chai
+      .request(app)
       .get("/blog-posts")
       .then(function(res) {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
         expect(res.body).to.be.a("array");
-
-        expect(res.body.length).to.be.at.least(1);
-
-        // each item should be an object with key/value pairs
-        // for `id`, `name` and `ingredients`.
-        const expectedKeys = ['id', 'title', 'content', 'author', 'publishDate'];
+        expect(res.body.length).to.be.above(0);
         res.body.forEach(function(item) {
           expect(item).to.be.a("object");
-          expect(item).to.include.keys(expectedKeys);
+          expect(item).to.have.all.keys(
+            "id",
+            "title",
+            "content",
+            "author",
+            "publishDate"
+          );
         });
-
-  })  
-});
+      });
+  });
   it("should add a blog post on POST", function() {
-    const newBlog = { 'Blog about tech', 'Lorem Ipsum', 'Lorenzo Jim'};
+    const newBlog = { title:'Blog about tech', content: 'Lorem Ipsum', author: 'Lorenzo Jim'};
     return chai 
       .request(app)
       .post("/blog-posts")
@@ -49,12 +50,23 @@ describe("Blog Post", function() {
         expect(res).to.have.status(201);
         expect(res).to.be.json;
         expect(res.body).to.be.a('object');
-        expect(res.body).to.inculde.keys('id', 'title', 'content', 'author', 'publishDate');
+        expect(res.body).to.inculde.keys('id', 'title', 'content', 'author',);
         expect(res.body.id).to.not.equal(null);
         expect(res.body).to.deep.equal(
           Object.assign(newBlog, { id: res.body.id })
          );
       })
+  });
+
+  it("should error if POST missing expected values", function() {
+    const badRequestData = {};
+    return chai
+      .request(app)
+      .post("/blog-posts")
+      .send(badRequestData)
+      .then(function(res) {
+        expect(res).to.have.status(400);
+      });
   });
   
   it("should update a specified blog post on PUT", function() {

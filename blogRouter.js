@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {BlogPosts} = require('./models');
+const {BlogPosts} = require('./model');
 
 function lorem() {
   return 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod ' +
@@ -59,7 +59,7 @@ router.put('/:id', (req, res) => {
   	id: req.params.id,
   	title: req.body.title,
   	content: req.body.content,
-  	author: req.body.author
+  	author: req.body.author,
   	publishDate: req.body.publishDate
   });  	
   res.status(204).end();

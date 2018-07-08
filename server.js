@@ -1,14 +1,15 @@
-'use strict';
+const express = require("express");
+const morgan = require("morgan");
 
-const express = require('express');
-const morgan = require('morgan');
+
+
 
 const blogRouter = require('./blogRouter');
 const app = express();
 
 // log the http layer
-app.use(morgan('common'));
 
+app.use(morgan("common"));
 app.use(express.json());
 
 //when request come into `/blog-post`
